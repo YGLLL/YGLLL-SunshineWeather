@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.ygl.sunshineweather.R;
+import com.example.ygl.sunshineweather.service.AutoUpdateService;
 import com.example.ygl.sunshineweather.util.HttpCallbackListener;
 import com.example.ygl.sunshineweather.util.HttpUtil;
 import com.example.ygl.sunshineweather.util.Utility;
@@ -158,5 +159,8 @@ public class WeatherActivity  extends Activity implements View.OnClickListener{
         //显示控件
         weatherInfoLayout.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
+        //启动后台更新天气服务
+        Intent i=new Intent(this, AutoUpdateService.class);
+        startService(i);
     }
 }
