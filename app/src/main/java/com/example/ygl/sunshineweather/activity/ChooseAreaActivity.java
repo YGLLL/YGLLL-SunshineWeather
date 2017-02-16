@@ -2,7 +2,10 @@ package com.example.ygl.sunshineweather.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -53,6 +56,13 @@ public class ChooseAreaActivity extends Activity {
     @Override
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
+        SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        if(prefs.getBoolean("city_selected",false)){
+            Intent intent=new Intent(this,WeatherActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         requestWindowFeature(Window.FEATURE_NO_TITLE);//设置为没有工具栏
         setContentView(R.layout.choose_area);
         listView=(ListView)findViewById(R.id.list_view);
@@ -72,6 +82,14 @@ public class ChooseAreaActivity extends Activity {
                         selectedCity=cityList.get(position);
                         //读取县市信息
                         queryCounties();
+                    }else {
+                        if(currentl_evel==LEVEL_COUNTY){
+                            String countyCode=countyList.get(position).getCountyCode();
+                            Intent intent=new Intent(ChooseAreaActivity.this,WeatherActivity.class);
+                            intent.putExtra("county_code",countyCode);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 }
             }
@@ -117,7 +135,7 @@ public class ChooseAreaActivity extends Activity {
     /**   * 查询选中市内所有的县，优先从数据库查询，如果没有查询到再去服务器上查询。   */
     private  void  queryCounties(){
         countyList=sunshineWeatherDB.loadCounties(selectedCity.getId());
-        if(!(cityList.size()>0)){
+        if(!(countyList.size()>0)){
             queryFromServer(selectedCity.getCityCode(),"county");
         }else{
             dataList.clear();
@@ -200,6 +218,9 @@ public class ChooseAreaActivity extends Activity {
         }
     }
 
+    /*
+     * 捕获Back按键，根据当前的级别来判断，此时应该返回市列表、省列表、还是直接退出
+     */
     @Override
     public void onBackPressed() {
         if (currentl_evel == LEVEL_COUNTY) {
