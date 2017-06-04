@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ygl.sunshineweather">
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission
+        android:name="android.permission.INTERNET"/>
+    <uses-permission
+        android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/><uses-permission
+    android:name="android.permission.INTERNET"/>
+    <uses-permission
+        android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission
+        android:name="android.permission.READ_SYNC_STATS"/>
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -19,6 +35,32 @@
         <activity android:name="com.example.ygl.sunshineweather.activity.WeatherActivity"></activity>
         <service android:name=".service.AutoUpdateService"></service>
         <receiver android:name=".receiver.AutoUpdateReceiver"></receiver>
+        <service
+            android:name="com.example.ygl.sunshineweather.sync.AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <provider
+            android:name="com.example.ygl.sunshineweather.db.StubProvider"
+            android:authorities="com.example.ygl.sunshineweather"
+            android:exported="false"
+            android:syncable="true"/>
+
+        <service
+            android:name="com.example.ygl.sunshineweather.sync.SyncService"
+            android:exported="true">
+            <!--android:process=":sync",未知作用，会阻碍同步-->
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
     </application>
 
 

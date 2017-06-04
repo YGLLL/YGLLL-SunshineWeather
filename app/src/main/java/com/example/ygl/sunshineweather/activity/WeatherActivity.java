@@ -1,6 +1,9 @@
 package com.example.ygl.sunshineweather.activity;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.ygl.sunshineweather.R;
 import com.example.ygl.sunshineweather.service.AutoUpdateService;
+import com.example.ygl.sunshineweather.sync.SyncAdapter;
 import com.example.ygl.sunshineweather.util.HttpCallbackListener;
 import com.example.ygl.sunshineweather.util.HttpUtil;
 import com.example.ygl.sunshineweather.util.Utility;
@@ -72,6 +76,9 @@ public class WeatherActivity  extends Activity implements View.OnClickListener{
 
         switchCity.setOnClickListener(this);
         refreshWeather.setOnClickListener(this);
+
+        // Create the dummy account
+        SyncAdapter.CreateSyncAccount(WeatherActivity.this);
     }
 
     @Override
